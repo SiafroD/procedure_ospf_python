@@ -1,6 +1,6 @@
 class Reseau:
     def __init__(self,zones):
-        self.liste_zone = zones             #liste de toutes les zones
+        self.liste_zones = zones             #liste de toutes les zones
 
     def initialisation(self):
         '''
@@ -40,10 +40,23 @@ class Routeur:
 
     def hello(self):
         '''
-        Le routeur parcours chacun de ses liens (self.links) et envoie un message dans chacun d'entre eux. Il déclenche la méthode 'destination_hello' du link
-        visé, [... pas encore certains de la suite]
+        Le routeur envoie un message hello comprennant sa lsbd (table de relation) vers tous ses sous liens (self.links). La méthode 'destination_hello' de la class Link enverra le message
+        à l'autre extrémité du lien (avec en paramètre self.name)
         '''
+        pass
 
+    def envoi_paquet(self):
+        '''
+        Le routeur envoie simplement vers une destination de son choix. Via les relations déterminées dans la méthode 'plus_courts_chemins', et possiblement la méthode 'view_zone',
+        le paquet pourra partir de son origine jusqu'à sa destination.
+        '''
+        pass
+
+    def recevoir_paquet(self,type):
+        '''
+        Si le paquet reçu est un paquet hello, le routeur met à jour sa table de routage. Par ailleurs, s'il voit dans le message reçu apparaître son propre nom, il ajoutera le nom du routeur ou
+        sous-réseau ayant envoyé le message comme l'un de ses voisins (self.voisins)
+        '''
         pass
 
 
@@ -72,10 +85,25 @@ class Link:
             self._status = val
     status = property(get_status,set_status) 
 
+    #De manière globale, si self.status == 'Down', les fonctions renverront à celui qui les a input un message d'erreur (via une fonction pas encore définie : recevoir_erreur()) 
 
     def destination_hello(self,R):
         '''
-        Méthode déclenchée par la méthode 'hello' de la class Routeur. R est le routeur ayant envoyé le message Hello. La fonction retourne None si le Routeur destination est en panne. Sinon, elle en retourne
-        le nom
+        Méthode déclenchée par la méthode 'hello' de la class Routeur. R est le routeur ayant envoyé le message Hello. Lance soit la méthode 'recevoir_paquet()' de la class Routeur, soit la méthode
+        'transmission_hello' de la class Sous-Reseau
+        '''
+        pass
+
+
+class Sous_Reseau():
+    def __init__(self):
+        self.links = links
+        self.voisins = voisins
+        #un peu obscure...
+
+    def transmission_hello(self):
+        '''
+        Lorsqu'un sous-reseau reçoit un paquet hello, il l'envoie à travers tous ses liens vers d'autres destinations pour le propager. Il déclenchera alors la méthode 'destination_hello' de la class Link
+        (la même méthode qui l'a lancé)
         '''
         pass
